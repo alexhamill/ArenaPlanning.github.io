@@ -41,9 +41,9 @@ int main() {
 
 bool check(int order[], string blocks[]){
      int g=0;
-     string leters[8]={a,b,c,d,e,f,g,h};
+     string leters[8]={"a","b","c","d","e","f","g","h"};
      while (g<8){
-        if (blocks[order[g]].find(leters[g])== -1){
+        if (blocks[order[g]].find(leters[g]) == -1){
             return false;
         }
         g++;
