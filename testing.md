@@ -43,7 +43,7 @@ bool check(int order[], string blocks[]){
     int f=0;
     while (g<sizeof(combos[0]) / sizeof (combos[0][0])){
         while(f<8){
-            cout <<combos[g][f];
+            cout <<combos[f][g];
             f++;
         }
         g++;

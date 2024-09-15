@@ -70,7 +70,15 @@ int main() {
     //     c=0;
     //     i++;
     // }
-
+        int g=0;
+        int f=0;
+        while (g<sizeof(combos[0]) / sizeof (combos[0][0])){
+            while(f<8){
+                cout <<combos[f][g];
+                f++;
+            }
+         g++;
+        }
     return 0;
 }
      
