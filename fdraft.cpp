@@ -48,10 +48,39 @@ int main() {
                 }
                 com++;
             }
+            order[c]=c;
+            order[i]=i;
             c++;
         }
         i++;
     }
+
+    //PRINTS
+        int g=0;
+        int f=0;
+        while (g<sizeof(combos[0]) / sizeof (combos[0][0])){
+            while(f<8){
+                cout <<combos[f][g];
+                f++;
+            }
+         g++;
+        }
+    return 0;
+}
+     
+     
+
+
+
+
+
+
+
+
+
+
+
+
 
     // while (i<8){
     //     cout << classes[i] << " " << blocks[i] << endl;
@@ -70,16 +99,3 @@ int main() {
     //     c=0;
     //     i++;
     // }
-        int g=0;
-        int f=0;
-        while (g<sizeof(combos[0]) / sizeof (combos[0][0])){
-            while(f<8){
-                cout <<combos[f][g];
-                f++;
-            }
-         g++;
-        }
-    return 0;
-}
-     
-     
