@@ -23,6 +23,7 @@ int main() {
     string blocks[8];
     int order[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
     int combos[8][8] = { 0 };  // Initialize with zero
+    int letcom[8][8] = { 0 };
     string
 
     // Input loop (fix: increment `i` after both inputs)
@@ -62,6 +63,8 @@ int main() {
     while (g < com) {
         f = 0;  // Reset f for inner loop
         while (f < 8) {
+            cout << combos[f][g] << " ";
+            letcom[f][g]=le[combos[f][g]];
             cout << combos[f][g] << " ";
             f++;
         }
