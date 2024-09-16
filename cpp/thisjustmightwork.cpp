@@ -18,10 +18,12 @@ bool check(int order[], string blocks[]) {
 
 int main() {
     int i = 0;
+    string le[8] = { "a", "b", "c", "d", "e", "f", "g", "h" };
     string classes[8];
     string blocks[8];
     int order[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
     int combos[8][8] = { 0 };  // Initialize with zero
+    string
 
     // Input loop (fix: increment `i` after both inputs)
     while (i < 8) {
