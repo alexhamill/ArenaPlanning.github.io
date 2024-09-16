@@ -57,7 +57,9 @@ int main() {
         }
         i++;
     }
-
+    if (com==0){
+        cout << "no viable options"
+    }else{
     // Output the combinations 
     int g = 0, f = 0;
     while (g < com) {
@@ -71,15 +73,18 @@ int main() {
         cout << endl;
         g++;
     }
+    
     g=0, f=0;
     while (g < com) {
         f = 0;  // Reset f for inner loop
+        cout << "Option: ";
         while (f < 8) {
-            cout << letcom[f][g];
+            cout << letcom[f][g] << " ";
             f++;
         }
         cout << endl;
         g++;
+    }
     }
     return 0;
 }
