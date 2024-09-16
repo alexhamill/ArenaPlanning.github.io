@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
+#include <algorithm> 
 using namespace std;
+
 
 // testing: a a,b,c b b,c,d c f,g,h d a,b,c e d,e,f f a,g,h g c,e,g h a,e,g
 // more testing: a d b b c c d a e e f f g g h h
@@ -38,25 +40,18 @@ int main() {
     // Generates combinations
     i = 0;
     int c = 0, com = 0, b = 0;
-    while (i < 8) {
-        c = 0;  // Reset c for inner loop
-        while (c < 8) {
-            order[i] = c;
-            order[c] = i;
-            if (check(order, blocks)) {
-                b = 0;  // Reset b for the inner loop
-                while (b < 8) {
-                    combos[b][com] = order[b];
-                    b++;
-                }
-                com++;
+       // Generate permutations and check for valid combinations
+    
+    do {
+        if (check(order, blocks)) {
+            for (int b = 0; b < 8; ++b) {
+                combos[b][com] = order[b];
+                letcom[b][com] = classes[order[b]];
             }
-            order[c] = c;  // Reset to original values
-            order[i] = i;
-            c++;
+            com++;
         }
-        i++;
-    }
+    } while (next_permutation(order, order + 8));  // Generate next permutation
+
     cout <<endl<<endl;
     if (com==0){
         cout << "no viable options";
