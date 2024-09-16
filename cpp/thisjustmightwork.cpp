@@ -57,8 +57,9 @@ int main() {
         }
         i++;
     }
+    cout <<endl<<endl;
     if (com==0){
-        cout << "no viable options"
+        cout << "no viable options";
     }else{
     // Output the combinations 
     int g = 0, f = 0;
@@ -66,7 +67,7 @@ int main() {
         f = 0;  // Reset f for inner loop
         while (f < 8) {
             //cout << combos[f][g] << " ";
-            letcom[f][g]=le[combos[f][g]];
+            letcom[f][g]=classes[combos[f][g]];
             //cout << letcom[f][g] << " ";
             f++;
         }
