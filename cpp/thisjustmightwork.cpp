@@ -70,12 +70,13 @@ int main() {
         g++;
     }
     
-    g=0, f=0;
+     g=0, f=0;
     while (g < com) {
-        f = 0;  // Reset f for inner loop
-        cout << "Option: ";
+        f =0;  // Reset f for inner loop
+        cout << "Option "<<(g+1)<<":"<<endl;
         while (f < 8) {
-            cout << letcom[f][g] << " ";
+            char n = 'A' + f;
+            cout << n<<": "<< letcom[f][g] << endl;
             f++;
         }
         cout << endl;
