@@ -1,7 +1,10 @@
 /* Dropdown Button */
-.inline{
-  display: inline;
-}
+.inline {
+   display: inline;
+   padding:2px;
+   padding:10px;
+   border: 2px solid orange;
+ }
 .dropbtn {
     background-color: #04AA6D;
     color: white;
