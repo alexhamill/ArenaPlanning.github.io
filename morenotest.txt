@@ -1,0 +1,179 @@
+Since you're running your website on GitHub Pages, which only serves static content (HTML, CSS, JavaScript), you won’t be able to directly run a backend service like a C++ server on GitHub Pages. However, I can guide you through an alternative approach using GitHub Pages for the frontend and an external service for the backend.
+
+### Step-by-Step Guide to Integrate Your HTML with a C++ Backend
+
+1. **Host Frontend on GitHub Pages** (Done).
+   - Your HTML, CSS, and JavaScript are already hosted on GitHub Pages. You can continue developing your frontend as described in the previous responses.
+
+2. **Set Up a C++ Backend Server**.
+   - To process the data from the frontend using C++, you need to host the C++ application somewhere. GitHub Pages cannot run backend code, but you can use a service like **Heroku**, **AWS EC2**, or **DigitalOcean** to host your C++ backend.
+
+   For simplicity, I will assume you are using **Heroku** to deploy the C++ server.
+
+#### Steps to Set Up the C++ Backend on Heroku:
+
+##### A. **Install Heroku CLI**
+   - If you don’t have it already, download and install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli).
+   - Log in to Heroku from your terminal:
+     ```bash
+     heroku login
+     ```
+
+##### B. **Create a Simple C++ Server**
+   For the C++ backend, you can use a lightweight web framework like **Crow** or **Drogon**.
+
+   Here's an example using **Crow** (a simple C++ web framework):
+
+   1. **Install Crow**:
+      Follow the instructions for Crow installation on [Crow's GitHub page](https://github.com/CrowCpp/Crow).
+
+   2. **Create a Simple C++ Server**:
+      Here’s an example of a basic C++ server that receives a POST request with the selected classes from your frontend:
+
+      ```cpp
+      #define CROW_MAIN
+      #include "crow.h"
+
+      int main()
+      {
+          crow::SimpleApp app;
+
+          CROW_ROUTE(app, "/submit-classes").methods("POST"_method)([](const crow::request& req) {
+              auto body = crow::json::load(req.body);
+              if (!body)
+                  return crow::response(400);
+
+              std::string selected_classes = body["classes"].dump();
+              std::cout << "Received classes: " << selected_classes << std::endl;
+
+              return crow::response("Classes received successfully!");
+          });
+
+          app.port(8080).multithreaded().run();
+      }
+      ```
+
+   3. **Deploy the Server to Heroku**:
+      - Create a new Heroku app:
+        ```bash
+        heroku create your-app-name
+        ```
+      - Initialize a Git repository if you haven't already:
+        ```bash
+        git init
+        ```
+      - Commit your C++ server code to the repository:
+        ```bash
+        git add .
+        git commit -m "Add C++ server"
+        ```
+      - Push your code to Heroku:
+        ```bash
+        git push heroku master
+        ```
+      - Once the push is complete, your server will be live, and Heroku will provide you with a URL for your server.
+
+##### C. **Test the C++ Server**:
+   - Visit `https://your-app-name.herokuapp.com/submit-classes` to check if the server is running. (You’ll need to send a POST request from the frontend to this URL, as we’ll see next.)
+
+#### 3. **Connect Your GitHub Pages Site with the C++ Backend**.
+
+##### A. **Modify the Frontend Code to Send Data to the C++ Backend**:
+   Now that your C++ server is live, modify your frontend (which is hosted on GitHub Pages) to send the selected checkboxes to your backend:
+
+   ```html
+   <!DOCTYPE html>
+   <html>
+   <head>
+     <style>
+       .checkbox-group {
+         display: flex;
+         flex-wrap: wrap;
+         gap: 10px; /* Adds space between checkboxes */
+       }
+     </style>
+   </head>
+   <body style="background-color:#c5e9f8;">
+     <center>
+       <h1>Welcome to Arena Planning</h1>
+       <p>Enter your classes into the boxes to see available options</p>
+     </center>
+
+     <h2>What classes are you taking?</h2>
+
+     <div class="inline">
+       <fieldset>
+         <legend>Math</legend>
+         <div id="math-classes" class="checkbox-group"></div>
+       </fieldset>
+     </div>
+     
+     <!-- Button to submit form -->
+     <button id="submit">Submit</button>
+
+     <script>
+       const classList = [
+         'Pre-Algebra (EL)',
+         'Algebra I (EL)',
+         'Algebra I',
+         'Geometry (EL)',
+         'Geometry',
+         'Pre-Calculus',
+         'Calculus'
+       ];
+
+       // Create checkboxes dynamically
+       const classContainer = document.getElementById('math-classes');
+       classList.forEach((className, index) => {
+         const checkbox = document.createElement('input');
+         checkbox.type = 'checkbox';
+         checkbox.id = `class${index}`;
+         checkbox.name = 'classes';
+         checkbox.value = className;
+
+         const label = document.createElement('label');
+         label.setAttribute('for', `class${index}`);
+         label.textContent = className;
+
+         classContainer.appendChild(checkbox);
+         classContainer.appendChild(label);
+       });
+
+       // Collect selected checkboxes and send data on submit
+       document.getElementById('submit').addEventListener('click', function() {
+         const selectedClasses = [];
+         document.querySelectorAll('input[name="classes"]:checked').forEach((checkbox) => {
+           selectedClasses.push(checkbox.value);
+         });
+         
+         // Send the data to the C++ server hosted on Heroku
+         fetch('https://your-app-name.herokuapp.com/submit-classes', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ classes: selectedClasses })
+         })
+         .then(response => response.text())
+         .then(data => console.log('Response from server:', data))
+         .catch(error => console.error('Error:', error));
+       });
+     </script>
+   </body>
+   </html>
+   ```
+
+### Explanation:
+- **Frontend (GitHub Pages)**: Your frontend collects the selected checkboxes and sends them as JSON data via a POST request to the C++ server.
+- **Backend (Heroku)**: Your C++ backend (Crow) processes the incoming data and logs the selected classes or performs additional processing.
+
+#### 4. **Access the Frontend and Test It**:
+- Visit your GitHub Pages site, select some classes, and click submit.
+- Your C++ backend will receive the data and respond accordingly. You can check the Heroku logs to see what data was sent:
+  ```bash
+  heroku logs --tail --app your-app-name
+  ```
+
+### Summary:
+- **Frontend (GitHub Pages)**: Displays the checkboxes and submits the selected classes.
+- **Backend (Heroku with C++)**: Receives and processes the data.
+  
+This approach gives you a scalable way to integrate a frontend hosted on GitHub Pages with a C++ backend hosted on Heroku or a similar service.
