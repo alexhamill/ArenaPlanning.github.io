@@ -1,0 +1,91 @@
+To get HTML input into your Python script on GitHub Pages, you need to understand that GitHub Pages doesn't support server-side languages like Python. However, you can use a service like Flask, deployed separately, to handle Python, and link it to your GitHub Pages. Here’s how you can approach it:
+
+### Step 1: Set Up GitHub Pages
+1. **Create a GitHub Repository**:
+   - Go to GitHub and create a new repository. Name it something like `yourusername.github.io`. This will automatically enable GitHub Pages.
+   - Make sure the repository is public.
+
+2. **Add an HTML File**:
+   - Create a file called `index.html` in your repository.
+   - Add your HTML form, for example:
+     ```html
+     <html>
+     <body>
+       <h1>Input Form</h1>
+       <form action="http://127.0.0.1:5000/process" method="post">
+         <label for="input">Enter your text:</label>
+         <input type="text" id="input" name="input_text">
+         <input type="submit" value="Submit">
+       </form>
+     </body>
+     </html>
+     ```
+   This form will capture input and try to send it to your Python server (which you'll set up separately).
+
+### Step 2: Set Up a Python Server with Flask
+1. **Install Flask**:
+   If you don’t already have it, install Flask using pip:
+   ```bash
+   pip install Flask
+   ```
+
+2. **Create a Python Script**:
+   Create a Python script, `app.py`, and add the following code to set up a basic server that can receive input from your HTML form:
+   ```python
+   from flask import Flask, request, render_template
+
+   app = Flask(__name__)
+
+   @app.route('/')
+   def home():
+       return 'Server is running'
+
+   @app.route('/process', methods=['POST'])
+   def process():
+       input_text = request.form['input_text']
+       return f'You entered: {input_text}'
+
+   if __name__ == '__main__':
+       app.run(debug=True)
+   ```
+
+3. **Run the Python Server**:
+   - In your terminal, navigate to the folder where your `app.py` file is located.
+   - Run the server using the command:
+     ```bash
+     python app.py
+     ```
+   - This will start a Flask server running at `http://127.0.0.1:5000`.
+
+### Step 3: Link the HTML Form to Your Flask Server
+1. **Change the `action` Attribute in the Form**:
+   - In your HTML form (on GitHub Pages), change the `action` attribute of the `<form>` tag to point to your Flask server:
+     ```html
+     <form action="http://127.0.0.1:5000/process" method="post">
+     ```
+
+   - This form sends the data to the Flask server you created.
+
+2. **Test Your Application**:
+   - Open your GitHub Pages site in a browser (it will be hosted at `https://yourusername.github.io`).
+   - When you submit the form, it will send the data to your Python server (running locally).
+
+### Step 4: Deploy the Flask App (Optional)
+If you want your Python script to be accessible from the web (not just locally), you'll need to deploy the Flask app to a server. You can use platforms like:
+
+1. **Heroku**:
+   - Follow Heroku’s documentation to deploy your Flask app: https://devcenter.heroku.com/articles/getting-started-with-python.
+   - Once deployed, update your form’s `action` attribute to point to the Heroku URL.
+
+2. **Railway or Render**:
+   - You can also use other free platforms like [Railway](https://railway.app/) or [Render](https://render.com/) to deploy your Flask app.
+
+3. **Change Form Action to Hosted Server**:
+   After deploying, update your HTML form to point to the live URL of your Flask server.
+
+   ```html
+   <form action="https://your-flask-app.herokuapp.com/process" method="post">
+   ```
+
+### Final Note
+Since GitHub Pages is a static hosting platform, Python won’t run directly on it. You need a server to handle Python code, and linking them through the form's `action` attribute enables communication between the two.
