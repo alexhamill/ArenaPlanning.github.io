@@ -1,0 +1,143 @@
+Sure! Here’s a step-by-step guide to deploying your C++ server using **Render**, which offers a free tier and can be a good alternative to Heroku.
+
+### Step 1: Create a Render Account
+
+1. **Go to [Render.com](https://render.com/)**.
+2. **Sign up** for an account using your email, Google, or GitHub.
+3. **Verify your email** if necessary.
+
+### Step 2: Create a New Web Service
+
+1. **Go to your Render dashboard**.
+2. On the dashboard, click the **“New” button** and choose **“Web Service”**.
+
+### Step 3: Connect GitHub (Optional)
+
+If you have your C++ project on GitHub (or want to push it there), Render can automatically pull the code from your GitHub repository:
+
+1. **Connect your GitHub account** when prompted.
+2. **Select the repository** that contains your C++ project.
+
+If your project is not on GitHub, you can push it there, or upload it manually to Render (which I’ll explain in the next step).
+
+### Step 4: Create Your C++ Project Structure
+
+If you haven't already, create a basic structure for your C++ server project. It should include:
+- A **`Makefile`** that will tell Render how to build your project.
+- A **`Procfile`** to specify how to run your C++ server.
+- Your C++ source files (`.cpp`, `.h` files).
+
+Example structure:
+```
+your-project/
+├── Makefile
+├── main.cpp
+└── Procfile
+```
+
+#### Example `Makefile`:
+```makefile
+all: main
+
+main: main.o
+    g++ -o main main.o
+
+main.o: main.cpp
+    g++ -c main.cpp
+```
+
+#### Example `Procfile`:
+Create a `Procfile` in the root directory. This tells Render how to start your server:
+```bash
+web: ./main
+```
+
+### Step 5: Push Your Project to GitHub (Optional)
+
+If you haven’t already, follow these steps to push your C++ project to GitHub:
+
+1. **Initialize a git repository** in your project directory (if not done already):
+   ```bash
+   git init
+   ```
+2. **Add your files to git**:
+   ```bash
+   git add .
+   ```
+3. **Commit your files**:
+   ```bash
+   git commit -m "Initial commit of C++ project"
+   ```
+4. **Create a new repository** on GitHub and push your local project to GitHub:
+   ```bash
+   git remote add origin https://github.com/your-username/your-repo-name.git
+   git push -u origin master
+   ```
+
+### Step 6: Configure and Deploy the Web Service on Render
+
+Now back to Render:
+
+1. **Select your repository** if you connected GitHub, or manually upload your files to Render using the **"Manual Deploy"** option.
+2. Choose your **region** (closer to your users if applicable).
+3. Choose the **branch** from your GitHub repository (likely `main` or `master`).
+4. **Set the name of your service**, which will be part of your public URL (e.g., `your-app-name.onrender.com`).
+5. **Set the environment** to **`Docker`** since Render uses container-based deployment, or just proceed with the default settings if you uploaded files manually.
+
+### Step 7: Configure Your Build and Start Commands
+
+1. In the **build settings**, specify your build commands. This tells Render how to compile your C++ server:
+   ```bash
+   make
+   ```
+
+2. In the **start command**, tell Render how to run your server:
+   ```bash
+   ./main
+   ```
+
+### Step 8: Deploy the Service
+
+Once everything is configured:
+
+1. Click **Create Web Service**.
+2. Render will begin to build and deploy your C++ server.
+3. You can view the deployment logs in the dashboard to ensure that the build completes successfully.
+
+### Step 9: Test Your Web Service
+
+1. Once the build is complete, Render will provide a URL where your app is live.
+2. Visit that URL to test if your server is running. If you set up your C++ code correctly, it should display output or respond to requests.
+
+### Step 10: Connect Your Frontend to the Backend
+
+If you're running your frontend on GitHub Pages, you can now update your JavaScript to send requests to your Render URL.
+
+For example, in your frontend JavaScript code:
+```javascript
+fetch('https://your-app-name.onrender.com/submit-classes', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ classes: selectedClasses })
+})
+.then(response => response.text())
+.then(data => console.log('Response from server:', data))
+.catch(error => console.error('Error:', error));
+```
+
+### Step 11: Monitor and Manage the Service
+
+- **Monitor logs**: Render provides live logs so you can troubleshoot or check on your application.
+- **Scaling**: Render automatically scales your service based on traffic, but for the free tier, scaling is limited.
+- **Free Tier Limitations**: Your service will sleep after 15 minutes of inactivity and take a few seconds to wake up when accessed.
+
+### Summary
+
+1. **Sign up for Render**.
+2. **Create a new Web Service** and connect GitHub or upload your project.
+3. **Configure build and start commands** (`make` and `./main`).
+4. **Deploy your service**.
+5. **Test the live URL** provided by Render.
+6. **Connect your frontend** to the backend using the URL.
+
+This will allow you to host your C++ server for free using Render!
